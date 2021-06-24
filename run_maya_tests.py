@@ -39,9 +39,9 @@ if __name__ == "__main__":
         "--cover-tests",
         "--cover-erase",
 
-        "--exclude-dir=ava/nuke",
-        "--exclude-dir=ava/houdini",
-        "--exclude-dir=ava/schema",
+        "--exclude-dir=anvil/nuke",
+        "--exclude-dir=anvil/houdini",
+        "--exclude-dir=anvil/schema",
     ])
 
     nose.main(argv=argv,
