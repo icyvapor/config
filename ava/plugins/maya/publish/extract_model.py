@@ -17,11 +17,11 @@ class ExtractAvaModel(pyblish.api.InstancePlugin):
 
     def process(self, instance):
         import os
-        import ava
+        import ava.plugins.publish.utils as utils
         from maya import cmds
         from avalon import maya
 
-        dirname = ava.format_staging_dir(
+        dirname = utils.format_staging_dir(
             root=instance.context.data["workspaceDir"],
             time=instance.context.data["time"],
             name=instance.data["name"])

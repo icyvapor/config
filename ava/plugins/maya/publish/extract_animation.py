@@ -1,5 +1,5 @@
 import pyblish.api
-
+import ava.publish.utils as utils
 
 class ExtractAvaAnimation(pyblish.api.InstancePlugin):
     """Produce an alembic of just point positions and normals.
@@ -19,7 +19,7 @@ class ExtractAvaAnimation(pyblish.api.InstancePlugin):
 
     def process(self, instance):
         import os
-        import ava
+        import ava.plugins.publish.utils as utils
         from maya import cmds
         from avalon import maya
 
@@ -27,7 +27,7 @@ class ExtractAvaAnimation(pyblish.api.InstancePlugin):
         cmds.loadPlugin("AbcExport.mll", quiet=True)
 
         self.log.info("Extracting animation..")
-        dirname = ava.format_staging_dir(
+        dirname = utils.format_staging_dir(
             root=instance.context.data["workspaceDir"],
             time=instance.context.data["time"],
             name=instance.data["name"])

@@ -17,7 +17,7 @@ class AvaExtractHistoryLookdev(pyblish.api.InstancePlugin):
 
     def process(self, instance):
         import os
-        import ava
+        import ava.plugins.publish.utils as utils
         import contextlib
         from maya import cmds
         from avalon import maya
@@ -44,7 +44,7 @@ class AvaExtractHistoryLookdev(pyblish.api.InstancePlugin):
                 for src, dst in connections:
                     cmds.connectAttr(src, dst, force=True)
 
-        dirname = ava.format_staging_dir(
+        dirname = utils.format_staging_dir(
             root=instance.context.data["workspaceDir"],
             time=instance.context.data["time"],
             name=instance.data["name"])

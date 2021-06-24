@@ -36,6 +36,7 @@ class IntegrateAvalonAsset(pyblish.api.InstancePlugin):
         ASSET = instance.data.get("asset") or api.Session["AVALON_ASSET"]
         SILO = api.Session["AVALON_SILO"]
         LOCATION = api.Session["AVALON_LOCATION"]
+        HIERARCHY = api.Session["AVALON_HIERARCHY"]
 
         context = instance.context
 
@@ -143,6 +144,7 @@ class IntegrateAvalonAsset(pyblish.api.InstancePlugin):
             "root": api.registered_root(),
             "project": PROJECT,
             "silo": SILO,
+            "hierarchy": HIERARCHY,
             "asset": ASSET,
             "subset": subset["name"],
             "version": version["name"],
