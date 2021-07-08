@@ -12,7 +12,7 @@ class LookLoader(avalon.maya.Loader):
         import json
 
         from maya import cmds
-        from anvil.maya import lib
+        from anvil.utils.maya import lib
 
         try:
             existing_reference = cmds.file(self.fname,

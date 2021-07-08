@@ -1,5 +1,5 @@
 import pyblish.api
-import anvil.publish.utils as utils
+
 
 class ExtractAvaAnimation(pyblish.api.InstancePlugin):
     """Produce an alembic of just point positions and normals.

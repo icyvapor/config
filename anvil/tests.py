@@ -15,7 +15,7 @@ from maya import cmds
 import pyblish.api
 import pyblish.util
 
-from avalon import api, maya, io, inventory, schema
+from avalon_config import api, maya, io, inventory, schema
 
 from nose.tools import (
     with_setup,
@@ -30,7 +30,7 @@ TASK_NAME = "modeling"
 self = sys.modules[__name__]
 self._tempdir = None
 self._config = {
-    "schema": "avalon-core:config-1.0",
+    "schema": "avalon_config-core:config-1.0",
     "apps": [
         {"name": "app1"},
     ],
@@ -48,7 +48,7 @@ self._config = {
     "copy": {}
 }
 self._inventory = {
-    "schema": "avalon-core:inventory-1.0",
+    "schema": "avalon_config-core:inventory-1.0",
     "assets": [
         {"name": ASSET_NAME},
     ],

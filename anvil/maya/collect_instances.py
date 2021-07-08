@@ -39,7 +39,7 @@ class CollectAvaInstances(pyblish.api.ContextPlugin):
                 continue
 
             if cmds.getAttr(objset + ".id") not in (
-                    "pyblish.avalon.instance",
+                    "pyblish.avalon_config.instance",
 
                     # Backwards compatibility
                     "pyblish.anvil.instance"):

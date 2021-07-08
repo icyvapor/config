@@ -23,7 +23,7 @@ class ExtractAvaLookdev(pyblish.api.InstancePlugin):
         from maya import cmds
 
         from avalon import maya
-        from anvil.maya import lib
+        from anvil.utils.maya import lib
 
         dirname = utils.format_staging_dir(
             root=instance.context.data["workspaceDir"],

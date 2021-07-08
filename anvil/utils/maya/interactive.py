@@ -10,7 +10,7 @@ what state the button was pressed in. None of this data is used here.
 """
 
 from maya import cmds, mel
-from . import commands, lib
+from anvil.utils.maya import commands, lib
 
 
 def connect_shapes(*args):

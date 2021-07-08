@@ -14,7 +14,6 @@ class ModelLoader(avalon.maya.Loader):
     def process(self, name, namespace, context, data):
         from maya import cmds
 
-        print("felix here")
         print(self.fname)
         self[:] = cmds.file(
             self.fname,

@@ -331,7 +331,7 @@ def apply_shaders(relationships, namespace=None):
     """Given a dictionary of `relationships`, apply shaders to meshes
 
     Arguments:
-        relationships (avalon-core:shaders-1.0): A dictionary of
+        relationships (avalon_config-core:shaders-1.0): A dictionary of
             shaders and how they relate to meshes.
 
     """

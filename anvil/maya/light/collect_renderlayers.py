@@ -51,7 +51,7 @@ class CollectAvaMayaRenderlayers(pyblish.api.ContextPlugin):
             # Include (optional) global settings
             # TODO(marcus): Take into account layer overrides
             try:
-                avalon_globals = maya.lsattr("id", "avalon.renderglobals")[0]
+                avalon_globals = maya.lsattr("id", "avalon_config.renderglobals")[0]
             except IndexError:
                 pass
             else:

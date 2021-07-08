@@ -83,7 +83,7 @@ class IntegrateAvalonAsset(pyblish.api.InstancePlugin):
             self.log.info("Subset '%s' not found, creating.." % subset_name)
 
             _id = io.insert_one({
-                "schema": "avalon-core:subset-2.0",
+                "schema": "avalon_config-core:subset-2.0",
                 "type": "subset",
                 "name": subset_name,
                 "data": {},
@@ -104,7 +104,7 @@ class IntegrateAvalonAsset(pyblish.api.InstancePlugin):
         self.log.debug("Next version: %i" % next_version)
 
         version = {
-            "schema": "avalon-core:version-2.0",
+            "schema": "avalon_config-core:version-2.0",
             "type": "version",
             "parent": subset["_id"],
             "name": next_version,
@@ -234,7 +234,7 @@ class IntegrateAvalonAsset(pyblish.api.InstancePlugin):
                 instance.data["output"].append(dst)
 
             representation = {
-                "schema": "avalon-core:representation-2.0",
+                "schema": "avalon_config-core:representation-2.0",
                 "type": "representation",
                 "parent": version_id,
                 "name": template_data["representation"],

@@ -1,12 +1,12 @@
 import os
-import uuid
+import sys
+from maya import cmds
 
-from maya import cmds, OpenMaya
-
-from avalon import maya, api as avalon
+from avalon import api as avalon
+from avalon.vendor.Qt import QtCore
 from pyblish import api as pyblish
 
-from . import menu
+from anvil.utils.maya import events, interactive, tools
 
 PARENT_DIR = os.path.dirname(__file__)
 PACKAGE_DIR = os.path.dirname(PARENT_DIR)
@@ -16,18 +16,20 @@ PUBLISH_PATH = os.path.join(PLUGINS_DIR, "maya", "publish")
 LOAD_PATH = os.path.join(PLUGINS_DIR, "maya", "load")
 CREATE_PATH = os.path.join(PLUGINS_DIR, "maya", "create")
 
+self = sys.modules[__name__]
+self._menu = avalon.Session["AVALON_LABEL"] + "menu"
 
 def install():
     pyblish.register_plugin_path(PUBLISH_PATH)
     avalon.register_plugin_path(avalon.Loader, LOAD_PATH)
     avalon.register_plugin_path(avalon.Creator, CREATE_PATH)
 
-    menu.install()
+    _menu_install()
 
-    avalon.on("init", on_init)
-    avalon.on("new", on_new)
-    avalon.on("save", on_save)
-    avalon.before("save", before_save)
+    avalon.on("init", events.on_init)
+    avalon.on("new", events.on_new)
+    avalon.on("save", events.on_save)
+    avalon.before("save", events.before_save)
 
 
 def uninstall():
@@ -35,76 +37,64 @@ def uninstall():
     avalon.deregister_plugin_path(avalon.Loader, LOAD_PATH)
     avalon.deregister_plugin_path(avalon.Creator, CREATE_PATH)
 
-    menu.uninstall()
+    _menu_uninstall()
 
 
-def _set_uuid(node):
-    """Add mbID to `node`
+def _menu_install():
+    def deferred():
+        # Append to Avalon's menu
+        cmds.menuItem(divider=True)
 
-    Unless one already exists.
+        # Modeling sub-menu
+        cmds.menuItem("Modeling",
+                      label="Modeling",
+                      tearOff=True,
+                      subMenu=True,
+                      parent=self._menu)
 
-    """
+        cmds.menuItem("Combine", command=interactive.combine)
 
-    attr = "{0}.mbID".format(node)
+        # Rigging sub-menu
+        cmds.menuItem("Rigging",
+                      label="Rigging",
+                      tearOff=True,
+                      subMenu=True,
+                      parent=self._menu)
 
-    if not cmds.objExists(attr):
-        cmds.addAttr(node, longName="mbID", dataType="string")
-        _, uid = str(uuid.uuid4()).rsplit("-", 1)
-        cmds.setAttr(attr, uid, type="string")
+        cmds.menuItem("Auto Connect", command=interactive.auto_connect)
+        cmds.menuItem("Clone (Local)", command=interactive.clone_localspace)
+        cmds.menuItem("Clone (World)", command=interactive.clone_worldspace)
+        cmds.menuItem("Clone (Special)", command=interactive.clone_special)
+        cmds.menuItem("Create Follicle", command=interactive.follicle)
 
+        # Animation sub-menu
+        cmds.menuItem("Animation",
+                      label="Animation",
+                      tearOff=True,
+                      subMenu=True,
+                      parent=self._menu)
 
-def on_init(_=None):
-    avalon.logger.info("Running callback on init..")
+        cmds.menuItem("Set Defaults", command=interactive.set_defaults)
 
-    maya.commands.reset_frame_range()
-    maya.commands.reset_resolution()
+        # Rendering sub-menu
+        cmds.menuItem("Rendering",
+                      label="Rendering",
+                      tearOff=True,
+                      subMenu=True,
+                      parent=self._menu)
 
+        cmds.menuItem("Edit Render Globals",
+                      command=tools.render_globals_editor)
 
-def on_new(_=None):
-    avalon.logger.info("Running callback on new..")
+        cmds.setParent("..", menu=True)
 
-    # Load dependencies
-    cmds.loadPlugin("AbcExport.mll", quiet=True)
-    cmds.loadPlugin("AbcImport.mll", quiet=True)
+        cmds.menuItem(divider=True)
 
-    maya.commands.reset_frame_range()
-    maya.commands.reset_resolution()
+        cmds.menuItem("Auto Connect", command=interactive.auto_connect_assets)
 
-
-def on_save(_=None):
-    """Automatically add IDs to new nodes
-
-    Any transform of a mesh, without an exising ID,
-    is given one automatically on file save.
-
-    """
-
-    avalon.logger.info("Running callback on save..")
-
-    nodes = (set(cmds.ls(type="mesh", long=True)) -
-             set(cmds.ls(long=True, readOnly=True)) -
-             set(cmds.ls(long=True, lockedNodes=True)))
-
-    transforms = cmds.listRelatives(list(nodes), parent=True) or list()
-
-    # Add unique identifiers
-    for node in transforms:
-        _set_uuid(node)
+    # Allow time for uninstallation to finish.
+    QtCore.QTimer.singleShot(200, deferred)
 
 
-def before_save(return_code, _=None):
-    """Prevent accidental overwrite of locked scene"""
-
-    # Manually override message given by default dialog
-    # Tested with Maya 2013-2017
-    dialog_id = "s_TfileIOStrings.rFileOpCancelledByUser"
-    message = ("Scene is locked, please save under a new name "
-               "or run cmds.remove(\"lock\") to override")
-    cmds.displayString(dialog_id, replace=True, value=message)
-
-    # Returning false in C++ causes this to abort a save in-progress,
-    # but that doesn't translate from Python. Instead, the `setBool`
-    # is used to mimic this beahvior.
-    # Docs: http://download.autodesk.com/us/maya/2011help/api/
-    # class_m_scene_message.html#a6bf4288015fa7dab2d2074c3a49f936
-    OpenMaya.MScriptUtil.setBool(return_code, not maya.is_locked())
+def _menu_uninstall():
+    pass

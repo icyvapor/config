@@ -12,7 +12,7 @@ class CreateRenderGlobals(maya.Creator):
         super(CreateRenderGlobals, self).__init__(*args, **kwargs)
 
         # We won't be publishing this one
-        self.data["id"] = "avalon.renderglobals"
+        self.data["id"] = "avalon_config.renderglobals"
 
         self.data.update({
             "pool": "",
@@ -25,7 +25,7 @@ class CreateRenderGlobals(maya.Creator):
         from maya import cmds
         from avalon import maya
 
-        exists = maya.lsattr("id", "avalon.renderglobals")
+        exists = maya.lsattr("id", "avalon_config.renderglobals")
         assert len(exists) <= 1, (
             "More than one renderglobal exists, this is a bug")
 

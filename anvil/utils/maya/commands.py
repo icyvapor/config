@@ -11,7 +11,7 @@ import sys
 
 from maya import cmds
 
-from . import lib
+from anvil.utils.maya import lib
 
 if sys.version_info[0] == 3:
     basestring = str

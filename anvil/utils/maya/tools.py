@@ -60,7 +60,7 @@ class _RenderGlobalsEditor(QtWidgets.QDialog):
         self.pools.blockSignals(False)
         self.groups.blockSignals(False)
 
-        exists = maya.lsattr("id", "avalon.renderglobals")
+        exists = maya.lsattr("id", "avalon_config.renderglobals")
         assert len(exists) <= 1, (
             "More than one renderglobal exists, this is a bug")
 
