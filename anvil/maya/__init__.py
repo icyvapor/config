@@ -43,7 +43,8 @@ def uninstall():
 def _menu_install():
     def deferred():
         # Append to Avalon's menu
-        cmds.menuItem(divider=True)
+        cmds.menuItem(divider=True,
+                      parent=self._menu)
 
         # Modeling sub-menu
         cmds.menuItem("Modeling",
@@ -93,7 +94,7 @@ def _menu_install():
         cmds.menuItem("Auto Connect", command=interactive.auto_connect_assets)
 
     # Allow time for uninstallation to finish.
-    QtCore.QTimer.singleShot(200, deferred)
+    QtCore.QTimer.singleShot(30000, deferred)
 
 
 def _menu_uninstall():
